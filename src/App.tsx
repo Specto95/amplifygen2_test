@@ -2,8 +2,12 @@ import { useEffect, useState } from "react";
 import type { Schema } from "../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 
-import { Authenticator } from "@aws-amplify/ui-react";
 import "@aws-amplify/ui-react/styles.css";
+
+import { Authenticator } from "@aws-amplify/ui-react";
+import { signInWithRedirect } from "aws-amplify/auth";
+
+signInWithRedirect({ provider: "Google" });
 
 const client = generateClient<Schema>();
 
@@ -25,10 +29,10 @@ function App() {
   }
 
   return (
-    <Authenticator>
-      {({ signOut }) => (
+    <Authenticator socialProviders={['google']}>
+      {({ signOut, user }) => (
         <main>
-          <h1>My todos</h1>
+          <h1>{user?.signInDetails?.loginId}'s todos</h1>
           <button onClick={createTodo}>+ new</button>
           <ul>
             {todos.map((todo) => (
